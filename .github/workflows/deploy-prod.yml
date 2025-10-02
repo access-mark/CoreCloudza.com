@@ -1,17 +1,31 @@
 name: Deploy – Production
-on: { workflow_dispatch: {} }  # manual trigger only (for now)
-permissions: { contents: read, pages: write, id-token: write }
+on:
+  workflow_dispatch: {}   # keep manual for safety; flip to push on launch
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Build prod from preview
+
+      - name: Build production artifact
         run: |
           mkdir -p out
-          cp -R preview/* out/
-          grep -rl 'noindex, nofollow' out | xargs -r sed -i 's/noindex, nofollow/index, follow/g'
-          grep -rl '/preview/' out | xargs -r sed -i 's/\/preview\//\//g'
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: out }
-      - uses: actions/deploy-pages@v4
+          cp -R * out/ || true
+          # Ensure indexing in prod
+          find out -name '*.html' -print0 | xargs -0 sed -i 's/noindex, nofollow/index, follow/g'
+          # OPTIONAL on launch day: add your custom domain
+          # echo "corecloudza.com" > out/CNAME
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
