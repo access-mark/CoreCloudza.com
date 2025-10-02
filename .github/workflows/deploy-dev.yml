@@ -2,16 +2,35 @@ name: Deploy – Development (preview)
 on:
   push:
     branches: [ dev ]
-permissions: { contents: read, pages: write, id-token: write }
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Prepare artifact
+
+      # Build preview into /dev without touching your repo files
+      - name: Build preview artifact
         run: |
-          mkdir -p out/preview
-          cp -R preview/* out/preview/
-      - uses: actions/upload-pages-artifact@v3
-        with: { path: out }
-      - uses: actions/deploy-pages@v4
+          mkdir -p out/dev
+          cp -R * out/dev/ || true
+          # Add noindex (only if not present)
+          grep -rl --include='*.html' '<meta name="robots"' out/dev || \
+            grep -rl --include='*.html' '<head>' out/dev | xargs -r sed -i '0,/<head>/s//&\
+  <meta name="robots" content="noindex, nofollow">/'
+          # Rewrite root-relative URLs (href="/..." or src="/...") to /CoreCloudza.com/dev/...
+          find out/dev -name '*.html' -print0 | xargs -0 sed -i 's/href="\/\([^"]*\)"/href="\/CoreCloudza.com\/dev\/\1"/g'
+          find out/dev -name '*.html' -print0 | xargs -0 sed -i 's/src="\/\([^"]*\)"/src="\/CoreCloudza.com\/dev\/\1"/g'
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
