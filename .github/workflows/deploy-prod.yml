@@ -1,21 +1,17 @@
 name: Deploy – Production
-on:
-  push: { branches: [ main ] }
-permissions: { contents: write }
+on: { workflow_dispatch: {} }  # manual trigger only (for now)
+permissions: { contents: read, pages: write, id-token: write }
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - name: Prep static build
+      - name: Build prod from preview
         run: |
-          mkdir -p build
-          rsync -a --delete --exclude ".git" --exclude ".github" ./ build/
-      - name: Publish to gh-pages (root)
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          keep_files: true
-          cname: corecloudza.com
+          mkdir -p out
+          cp -R preview/* out/
+          grep -rl 'noindex, nofollow' out | xargs -r sed -i 's/noindex, nofollow/index, follow/g'
+          grep -rl '/preview/' out | xargs -r sed -i 's/\/preview\//\//g'
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: out }
+      - uses: actions/deploy-pages@v4
