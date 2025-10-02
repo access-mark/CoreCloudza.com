@@ -1,21 +1,17 @@
 name: Deploy – Development (preview)
 on:
-  push: { branches: [ dev ] }
-permissions: { contents: write }
+  push:
+    branches: [ dev ]
+permissions: { contents: read, pages: write, id-token: write }
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 0 }
-      - name: Prep static build
+      - name: Prepare artifact
         run: |
-          mkdir -p build
-          rsync -a --delete --exclude ".git" --exclude ".github" ./ build/
-      - name: Publish to gh-pages (/preview)
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          destination_dir: preview
-          keep_files: true
+          mkdir -p out/preview
+          cp -R preview/* out/preview/
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: out }
+      - uses: actions/deploy-pages@v4
