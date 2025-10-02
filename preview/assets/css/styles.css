@@ -1,0 +1,77 @@
+/* CoreCloud Styles v9 (preview) */
+* { box-sizing: border-box; } html,body{height:100%}
+body{margin:0;font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--text);background:#fff;line-height:1.5}
+img{max-width:100%;display:block}
+:root{
+  --primary-blue:#004f91; --royal-blue:#003a6b; --electric-cyan:#15d1ff; --gold:#d4af37;
+  --text:#0f172a; --muted:#475569; --container:1200px; --radius:16px;
+}
+.container{max-width:var(--container);margin:0 auto;padding:0 16px}
+.visually-hidden{position:absolute;left:-9999px}
+.tiny{font-size:12px;color:var(--muted);padding:16px 0}
+
+/* Header/Nav */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:saturate(180%) blur(8px);border-bottom:1px solid #e5e7eb}
+.header-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.logo{height:36px;width:auto}
+.nav{display:flex;gap:18px;align-items:center}
+.nav a{text-decoration:none;color:#0f172a;font-weight:700;letter-spacing:.02em}
+.nav a:hover{color:var(--primary-blue)}
+.nav-toggle{display:none}
+
+/* Hero */
+.hero{position:relative;min-height:420px;display:grid;place-items:center;text-align:center;overflow:clip}
+.hero-media{position:absolute;inset:0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.55)),
+    var(--hero-url, linear-gradient(120deg,#0b1a2b,#003a6b)) center/cover no-repeat;
+}
+.hero-content{position:relative;color:#fff;padding:80px 0}
+.hero h1{font-size:40px;line-height:1.1;margin:0 0 12px}
+.hero p{font-size:18px;color:#e5e7eb;max-width:720px;margin:0 auto 24px}
+.actions{display:flex;gap:12px;justify-content:center}
+
+/* Sections */
+.section{padding:56px 0}
+.section.alt{background:linear-gradient(180deg,#f8fafc,#eef2f7);border-top:1px solid #e5e7eb;border-bottom:1px solid #e5e7eb}
+.two-col{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:start}
+.well{background:#fff;border:1px solid #e5e7eb;border-radius:var(--radius);padding:16px}
+
+/* Cards */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:var(--radius);padding:20px}
+.card h3{margin:0 0 8px;font-size:22px}
+.card p{color:var(--muted)}
+.link{font-weight:700;color:var(--primary-blue);text-decoration:none}
+.link:hover{text-decoration:underline}
+
+/* Buttons */
+.btn{display:inline-block;padding:10px 16px;border-radius:999px;border:2px solid transparent;font-weight:800;text-decoration:none}
+.btn-primary{background:var(--primary-blue);color:#fff}
+.btn-primary:hover{filter:brightness(1.05)}
+.btn-ghost{background:transparent;color:#fff;border-color:rgba(255,255,255,.6)}
+.btn-ghost:hover{background:rgba(255,255,255,.1)}
+
+/* Footer */
+.site-footer{background:#0b1a2b;color:#d1e0f0;margin-top:48px;padding:40px 0 0}
+.footer-grid{display:grid;grid-template-columns:1fr 1.4fr 1fr;gap:24px}
+.subscribe{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.subscribe input{flex:1 1 220px;padding:10px 12px;border-radius:10px;border:1px solid #2b3a4d;background:#0e233a;color:#fff}
+.subscribe button{background:var(--electric-cyan);color:#06203a;border-color:var(--electric-cyan)}
+
+/* Subnav */
+.subnav{display:flex;gap:14px;border-bottom:1px solid #e5e7eb;padding:10px 0 12px;margin-top:-24px;flex-wrap:wrap}
+.subnav a{font-weight:700;text-decoration:none;color:#334155;padding:8px 10px;border-radius:10px}
+.subnav a[aria-current="page"]{background:#e2e8f0;color:#0f172a}
+.subnav a:hover{background:#f1f5f9;color:#0f172a}
+
+/* Responsive */
+@media (max-width:900px){.grid-3{grid-template-columns:1fr}.two-col{grid-template-columns:1fr}}
+@media (max-width:760px){
+  .nav{position:fixed;inset:64px 0 auto 0;background:#0b1a2b;color:#fff;padding:16px;flex-direction:column;gap:12px;transform:translateY(-120%);transition:transform .25s ease}
+  .nav a{color:#d1e0f0}
+  .nav.open{transform:translateY(0)}
+  .nav-toggle{display:inline-block;background:var(--primary-blue);color:#fff;border:0;padding:8px 12px;border-radius:10px}
+  .hero{min-height:360px}
+  .hero h1{font-size:32px}
+}
